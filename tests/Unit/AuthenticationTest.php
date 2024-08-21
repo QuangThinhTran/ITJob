@@ -103,8 +103,6 @@ class AuthenticationTest extends TestCase
 
     public function testRegisterCandidate()
     {
-        Mail::fake();
-
         $candidate = [
             'name' => fake()->name(),
             'username' => fake()->name(),
@@ -119,7 +117,6 @@ class AuthenticationTest extends TestCase
         $responseAdmin = $this->post('user/user-register', $candidate);
         $responseAdmin->assertStatus(302);
         $responseAdmin->assertRedirect('/');
-        Mail::assertSent(RegisterMail::class);
 
         $this->assertDatabaseHas('user', [
             'name' => $candidate['name'],

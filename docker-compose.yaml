@@ -1,0 +1,68 @@
+services:
+
+  db:
+    container_name: db-service
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - db-store:/var/lib/mysql
+    networks:
+      - my-network
+
+  web:
+    container_name: web-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: recruitment-job:latest
+    ports:
+      - "9000:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - APP_ENV=production
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    working_dir: /var/www/recruitment-job
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - .:/var/www/recruitment-job
+    networks:
+      - my-network
+
+  nginx:
+    container_name: nginx-service
+    image: nginx:latest
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - .:/var/www/recruitment-job
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - my-network
+
+volumes:
+  db-store:
+
+networks:
+  my-network:
+    driver: bridge

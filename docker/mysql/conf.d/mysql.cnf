@@ -1,0 +1,25 @@
+my.cnf
+######################################
+### Nhóm mysqld: Cấu hình cho máy chủ MySQL
+######################################
+
+[mysqld]
+# Cấu hình bộ ký tự/ thứ tự so sánh
+character-set-server = utf8mb4
+collation-server = utf8mb4_bin
+
+######################################
+### Nhóm mysql: Cấu hình cho các tùy chọn của MySQL
+######################################
+
+[mysql]
+# Cấu hình bộ ký tự mặc định
+default-character-set = utf8mb4
+
+######################################
+### Nhóm client: Cấu hình cho các công cụ client của MySQL
+######################################
+
+[client]
+# Cấu hình bộ ký tự mặc định
+default-character-set = utf8mb4
