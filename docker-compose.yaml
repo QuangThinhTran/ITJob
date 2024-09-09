@@ -35,7 +35,7 @@ services:
     environment:
       - APP_ENV=production
       - DB_CONNECTION=${DB_CONNECTION}
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
