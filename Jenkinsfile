@@ -80,9 +80,9 @@ pipeline {
             sh ' cd "/var/lib/jenkins/workspace/Recruitment-Job"'
             sh 'rm -rf artifact.zip'
             sh 'zip -r artifact.zip . -x "*node_modules**"'
-//             withCredentials([sshUserPrivateKey(credentialsId: "recruitment-ec2-jenkins", keyFileVariable: 'keyfile')]) {
-//                 sh 'scp -v -o StrictHostKeyChecking=no -i ${keyfile} /var/lib/jenkins/workspace/Recruitment-Job/artifact.zip ec2-user@54.209.93.191:/home/ec2-user/artifact'
-//             }
+            withCredentials([sshUserPrivateKey(credentialsId: "recruitment-ec2-jenkins", keyFileVariable: 'keyfile')]) {
+                sh 'scp -v -o StrictHostKeyChecking=no -i ${keyfile} /var/lib/jenkins/workspace/Recruitment-Job/artifact.zip ec2-user@54.209.93.191:/home/ec2-user/artifact'
+            }
 //             sshagent(credentials: ['recruitment-ec2-jenkins']) {
 //                 sh 'ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 unzip -o /home/ec2-user/artifact/artifact.zip -d /var/www/html'
 //                 script {
