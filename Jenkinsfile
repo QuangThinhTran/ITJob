@@ -83,16 +83,16 @@ pipeline {
             withCredentials([sshUserPrivateKey(credentialsId: "recruitment-ec2-jenkins", keyFileVariable: 'keyfile')]) {
                 sh 'scp -v -o StrictHostKeyChecking=no -i ${keyfile} /var/lib/jenkins/workspace/Recruitment-Job/artifact.zip ec2-user@54.209.93.191:/home/ec2-user/artifact'
             }
-//             sshagent(credentials: ['recruitment-ec2-jenkins']) {
-//                 sh 'ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 unzip -o /home/ec2-user/artifact/artifact.zip -d /var/www/html'
-//                 script {
-//                     try {
-//                         sh 'ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 sudo chmod 777 /var/www/html/storage -R'
-//                     } catch (Exception e) {
-//                         echo 'Some file permissions could not be updated.'
-//                     }
-//                 }
-//             }
+            sshagent(credentials: ['recruitment-ec2-jenkins']) {
+                sh 'ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 unzip -o /home/ec2-user/artifact/artifact.zip -d /var/www/html'
+                script {
+                    try {
+                        sh 'ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 sudo chmod 777 /var/www/html/storage -R'
+                    } catch (Exception e) {
+                        echo 'Some file permissions could not be updated.'
+                    }
+                }
+            }
         }
         always {
             echo 'Cleaning up...'
