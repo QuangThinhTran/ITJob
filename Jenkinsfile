@@ -12,15 +12,15 @@ pipeline {
                 }
             }
         }
-//         stage("Verify SSH connection to server") {
-//             steps {
-//                 sshagent(credentials: ['recruitment-ec2-jenkins']) {
-//                     sh '''
-//                         ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 whoami
-//                     '''
-//                 }
-//             }
-//         }
+        stage("Verify SSH connection to server") {
+            steps {
+                sshagent(credentials: ['recruitment-ec2-jenkins']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 whoami
+                    '''
+                }
+            }
+        }
         stage("Clear all running docker containers") {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -76,14 +76,14 @@ pipeline {
     }
 
     post {
-//         success {
-//             sh ' cd "/var/lib/jenkins/workspace/RecruitmentJob"'
-//             sh 'rm -rf artifact.zip'
-//             sh 'zip -r artifact.zip . -x "*node_modules**"'
+        success {
+            sh ' cd "/var/lib/jenkins/workspace/Recruitment-Job"'
+            sh 'rm -rf artifact.zip'
+            sh 'zip -r artifact.zip . -x "*node_modules**"'
 //             withCredentials([sshUserPrivateKey(credentialsId: "recruitment-ec2-jenkins", keyFileVariable: 'keyfile')]) {
-//                 sh 'scp -v -o StrictHostKeyChecking=no -i ${keyfile} /var/lib/jenkins/workspace/RecruitmentJob/artifact.zip ec2-user@54.209.93.191:/home/ec2-user/artifact'
+//                 sh 'scp -v -o StrictHostKeyChecking=no -i ${keyfile} /var/lib/jenkins/workspace/Recruitment-Job/artifact.zip ec2-user@54.209.93.191:/home/ec2-user/artifact'
 //             }
-//             sshagent(credentials: ['aws-ec2-workshop']) {
+//             sshagent(credentials: ['recruitment-ec2-jenkins']) {
 //                 sh 'ssh -o StrictHostKeyChecking=no ec2-user@54.209.93.191 unzip -o /home/ec2-user/artifact/artifact.zip -d /var/www/html'
 //                 script {
 //                     try {
@@ -93,7 +93,7 @@ pipeline {
 //                     }
 //                 }
 //             }
-//     }
+        }
         always {
             echo 'Cleaning up...'
             sh 'docker ps'
